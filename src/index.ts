@@ -9,29 +9,42 @@ const levelTypeToNumber: Record<LevelType, number> = {
     "critical": 4,
 }
 
-class Luger {
-    private url: URL;
+/**
+ * Represents a logging utility class for sending log messages to a specified URL.
+ */
+class Wole {
+    private url: string;
     private httpHeaders?: HeadersInit;
     private defaultMeta?: ObjectType;
     private defaultLevel?: LevelType;
 
-    constructor(url: URL, httpHeaders?: HeadersInit, defaultMeta?: ObjectType, defaultLevel?: LevelType) {
+    /**
+    * Creates an instance of the Wole class.
+    * @param {string} url - The URL to send the log messages to.
+    * @param {HeadersInit} [httpHeaders] - The optional HTTP headers to include in the request.
+    * @param {ObjectType} [defaultMeta] - The optional default metadata to include in the log messages.
+    * @param {LevelType} [defaultLevel] - The optional default log level for the log messages.
+    */
+    constructor(url: string, httpHeaders?: HeadersInit, defaultMeta?: ObjectType, defaultLevel?: LevelType) {
         this.url = url;
         this.httpHeaders = httpHeaders;
         this.defaultMeta = defaultMeta;
         this.defaultLevel = defaultLevel;
     }
 
-    private async hasNetworkConnection(): Promise<boolean> {
-        return navigator.onLine;
-    }
-
+    /**
+     * Builds the request information object for sending a log message.
+     * @param {string} message - The log message.
+     * @param {ObjectType} [meta] - The optional metadata to include in the log message.
+     * @returns {RequestInit} The request information object.
+     * @private
+     */
     private buildRequestInfo(message: string, meta?: ObjectType): RequestInit {
         const headers = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Access-Control-Allow-Methods': '*',
-            'Access-Control-Allow-Origin': this.url.toString(),
+            'Access-Control-Allow-Origin': this.url,
             ...(this.httpHeaders || {}),
         };
 
@@ -50,66 +63,92 @@ class Luger {
         };
     }
 
+    /**
+    * Handles the error response from the server.
+    * @param {Response} response - The response object.
+    * @private
+    */
     private handleErrorResponse(response: Response): void {
-        // network error in the 4xx–5xx range
         if (!response.ok) {
             throw new Error(`${response.status} ${response.statusText}`);
         }
     }
 
-    private async log(message: string, meta?: ObjectType): Promise<void> {
+
+    private async logs(message: string, meta?: ObjectType): Promise<void> {
         try {
-            const hasNetworkConnection = await this.hasNetworkConnection();
-
-            if (!hasNetworkConnection) {
-                console.log("You're not connected to the internet; cannot send log!");
-                return;
-            }
-
             const requestInfo = this.buildRequestInfo(message, meta);
             const response = await fetch(this.url, requestInfo);
 
             this.handleErrorResponse(response);
+
+            console.log(`message: "${message}", sent successfully!`)
         } catch (error) {
             console.log(error);
         }
     }
 
-    debug(message: string, meta?: ObjectType) {
-        const check = this.defaultLevel && levelTypeToNumber[this.defaultLevel];
+    /**
+     * Sends a log message with the debug level.
+     * @param {string} message - The log message.
+     * @param {ObjectType} [meta] - The optional metadata to include in the log message.
+     * @returns {Promise<void>} A promise that resolves when the log message is sent successfully.
+     */
+    async debug(message: string, meta?: ObjectType) {
+        const check = this?.defaultLevel && levelTypeToNumber[this.defaultLevel];
         if (!Number.isNaN(check)) {
-            this.log(message, meta);
+            await this.logs(message, meta);
         }
     }
 
+    /**
+    * Sends a log message with the info level.
+    * @param {string} message - The log message.
+    * @param {ObjectType} [meta] - The optional metadata to include in the log message.
+    */
     info(message: string, meta?: ObjectType) {
-        const check = this.defaultLevel && levelTypeToNumber[this.defaultLevel];
+        const check = this?.defaultLevel && levelTypeToNumber[this.defaultLevel];
         if (!Number.isNaN(check)) {
-            this.log(message, meta);
+            this.logs(message, meta);
         }
     }
 
+    /**
+     * Sends a log message with the warning level.
+     * @param {string} message - The log message.
+     * @param {ObjectType} [meta] - The optional metadata to include in the log message.
+     */
     warning(message: string, meta?: ObjectType) {
         const check = this.defaultLevel && levelTypeToNumber[this.defaultLevel];
-        if (!!Number.isNaN(check)) {
-            this.log(message, meta);
+        if (!Number.isNaN(check)) {
+            this.logs(message, meta);
         }
     }
 
+    /**
+     * Sends a log message with the error level.
+     * @param {string} message - The log message.
+     * @param {ObjectType} [meta] - The optional metadata to include in the log message.
+     */
     error(message: string, meta?: ObjectType) {
-        const check = this.defaultLevel && levelTypeToNumber[this.defaultLevel];
+        const check = this?.defaultLevel && levelTypeToNumber[this.defaultLevel];
         if (!Number.isNaN(check)) {
-            this.log(message, meta);
+            this.logs(message, meta);
         }
     }
 
+    /**
+     * Sends a log message with the critical level.
+     * @param {string} message - The log message.
+     * @param {ObjectType} [meta] - The optional metadata to include in the log message.
+     */
     critical(message: string, meta?: ObjectType) {
-        const check = this.defaultLevel && levelTypeToNumber[this.defaultLevel];
+        const check = this?.defaultLevel && levelTypeToNumber[this.defaultLevel];
         if (!Number.isNaN(check)) {
-            this.log(message, meta);
+            this.logs(message, meta);
         }
     }
 
 }
 
-export { Luger };
+export default Wole;
