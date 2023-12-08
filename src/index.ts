@@ -74,7 +74,13 @@ class Wole {
         }
     }
 
-
+    /**
+     * Sends a log message to the specified URL.
+     * @param {string} message - The log message to send.
+     * @param {ObjectType} [meta] - The optional metadata to include in the log message.
+     * @returns {Promise<void>} A promise that resolves when the log message is sent successfully.
+     * @private
+     */
     private async logs(message: string, meta?: ObjectType): Promise<void> {
         try {
             const requestInfo = this.buildRequestInfo(message, meta);
