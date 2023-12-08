@@ -1,0 +1,27 @@
+{
+  "name": "lugs",
+  "version": "1.0.0",
+  "description": "A package for logging",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akinolu52/lugs.git"
+  },
+  "keywords": [
+    "logs",
+    "logger"
+  ],
+  "author": "Akinyemi Olumide Emmanuel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akinolu52/lugs/issues"
+  },
+  "homepage": "https://github.com/akinolu52/lugs#readme",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
