@@ -1,5 +1,5 @@
 type ObjectType = Record<string, any>;
-type LevelType = "debug" | "info" | "warning" | "error" | "critical";
+export type LevelType = "debug" | "info" | "warning" | "error" | "critical";
 
 const levelTypeToNumber: Record<LevelType, number> = {
     "debug": 0,
@@ -81,16 +81,18 @@ class Wole {
      * @returns {Promise<void>} A promise that resolves when the log message is sent successfully.
      * @private
      */
-    private async logs(message: string, meta?: ObjectType): Promise<void> {
+    private async log(message: string, meta?: ObjectType): Promise<void> {
         try {
             const requestInfo = this.buildRequestInfo(message, meta);
             const response = await fetch(this.url, requestInfo);
 
             this.handleErrorResponse(response);
 
-            console.log(`message: "${message}", sent successfully!`)
+            if (response.ok) {
+                console.log(`message: "${message}", sent successfully!`)
+            }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -103,7 +105,7 @@ class Wole {
     async debug(message: string, meta?: ObjectType) {
         const check = this?.defaultLevel && levelTypeToNumber[this.defaultLevel];
         if (!Number.isNaN(check)) {
-            await this.logs(message, meta);
+            await this.log(message, meta);
         }
     }
 
@@ -115,7 +117,7 @@ class Wole {
     info(message: string, meta?: ObjectType) {
         const check = this?.defaultLevel && levelTypeToNumber[this.defaultLevel];
         if (!Number.isNaN(check)) {
-            this.logs(message, meta);
+            this.log(message, meta);
         }
     }
 
@@ -127,7 +129,7 @@ class Wole {
     warning(message: string, meta?: ObjectType) {
         const check = this.defaultLevel && levelTypeToNumber[this.defaultLevel];
         if (!Number.isNaN(check)) {
-            this.logs(message, meta);
+            this.log(message, meta);
         }
     }
 
@@ -139,7 +141,7 @@ class Wole {
     error(message: string, meta?: ObjectType) {
         const check = this?.defaultLevel && levelTypeToNumber[this.defaultLevel];
         if (!Number.isNaN(check)) {
-            this.logs(message, meta);
+            this.log(message, meta);
         }
     }
 
@@ -151,7 +153,7 @@ class Wole {
     critical(message: string, meta?: ObjectType) {
         const check = this?.defaultLevel && levelTypeToNumber[this.defaultLevel];
         if (!Number.isNaN(check)) {
-            this.logs(message, meta);
+            this.log(message, meta);
         }
     }
 
