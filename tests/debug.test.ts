@@ -3,7 +3,6 @@ import LogToApi, { OptionType } from '../src';
 const url = "https://webhook.site/bfc693e6-36f9-4fcb-8b23-53a8f024ddae";
 const httpHeaders = { 'Authorization': 'Bearer abc123' };
 const defaultMeta = { environment: 'test' };
-const defaultLevel = 'debug';
 
 describe('debug testing with logToApi logger methods', () => {
     let logToApi: LogToApi;
@@ -12,7 +11,6 @@ describe('debug testing with logToApi logger methods', () => {
         url,
         httpHeaders,
         defaultMeta,
-        defaultLevel,
     };
 
     beforeEach(() => {
@@ -47,6 +45,7 @@ describe('debug testing with logToApi logger methods', () => {
                 body: expect.stringContaining(
                     JSON.stringify({
                         message,
+                        type: "debug",
                         meta: {
                             ...defaultMeta,
                             ...meta,
@@ -77,6 +76,7 @@ describe('debug testing with logToApi logger methods', () => {
                 body: expect.stringContaining(
                     JSON.stringify({
                         message,
+                        type: "info",
                         meta: {
                             ...defaultMeta,
                             ...meta,
@@ -85,7 +85,7 @@ describe('debug testing with logToApi logger methods', () => {
                 ),
             })
         );
-        expect(consoleLogMock).not.toHaveBeenCalledWith(`message: "${message}", sent successfully!`);
+        expect(consoleLogMock).toHaveBeenCalledWith(`message: "${message}", sent successfully!`);
     });
 
     it('should not log a message', async () => {
@@ -107,6 +107,7 @@ describe('debug testing with logToApi logger methods', () => {
                 body: expect.stringContaining(
                     JSON.stringify({
                         message,
+                        type: "warning",
                         meta: {
                             ...defaultMeta,
                             ...meta,
@@ -115,7 +116,7 @@ describe('debug testing with logToApi logger methods', () => {
                 ),
             })
         );
-        expect(consoleLogMock).not.toHaveBeenCalledWith(`message: "${message}", sent successfully!`);
+        expect(consoleLogMock).toHaveBeenCalledWith(`message: "${message}", sent successfully!`);
     });
 
     it('should not log a message', async () => {
@@ -137,6 +138,7 @@ describe('debug testing with logToApi logger methods', () => {
                 body: expect.stringContaining(
                     JSON.stringify({
                         message,
+                        type: "error",
                         meta: {
                             ...defaultMeta,
                             ...meta,
@@ -145,7 +147,7 @@ describe('debug testing with logToApi logger methods', () => {
                 ),
             })
         );
-        expect(consoleLogMock).not.toHaveBeenCalledWith(`message: "${message}", sent successfully!`);
+        expect(consoleLogMock).toHaveBeenCalledWith(`message: "${message}", sent successfully!`);
     });
 
     it('should not log a message', async () => {
@@ -167,6 +169,7 @@ describe('debug testing with logToApi logger methods', () => {
                 body: expect.stringContaining(
                     JSON.stringify({
                         message,
+                        type: "critical",
                         meta: {
                             ...defaultMeta,
                             ...meta,
@@ -175,6 +178,6 @@ describe('debug testing with logToApi logger methods', () => {
                 ),
             })
         );
-        expect(consoleLogMock).not.toHaveBeenCalledWith(`message: "${message}", sent successfully!`);
+        expect(consoleLogMock).toHaveBeenCalledWith(`message: "${message}", sent successfully!`);
     });
 });

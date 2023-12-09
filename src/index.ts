@@ -2,18 +2,9 @@ type ObjectType = Record<string, any>;
 export type LevelType = "debug" | "info" | "warning" | "error" | "critical";
 
 export type OptionType = {
-    url: string; 
-    httpHeaders?: HeadersInit; 
-    defaultMeta?: ObjectType; 
-    defaultLevel?: LevelType
-}
-
-const levelTypeToNumber: Record<LevelType, number> = {
-    "debug": 0,
-    "info": 1,
-    "warning": 2,
-    "error": 3,
-    "critical": 4,
+    url: string;
+    httpHeaders?: HeadersInit;
+    defaultMeta?: ObjectType;
 }
 
 /**
@@ -23,30 +14,28 @@ class LogToApi {
     private url: string;
     private httpHeaders?: HeadersInit;
     private defaultMeta?: ObjectType;
-    private defaultLevel?: LevelType;
 
     /**
     * Creates an instance of the LogToApi class.
     * @param {string} url - The URL to send the log messages to.
     * @param {HeadersInit} [httpHeaders] - The optional HTTP headers to include in the request.
     * @param {ObjectType} [defaultMeta] - The optional default metadata to include in the log messages.
-    * @param {LevelType} [defaultLevel] - The optional default log level for the log messages.
     */
     constructor(options: OptionType) {
         this.url = options.url;
         this.httpHeaders = options.httpHeaders;
         this.defaultMeta = options.defaultMeta;
-        this.defaultLevel = options.defaultLevel;
     }
 
     /**
      * Builds the request information object for sending a log message.
+     * @param {LevelType} type - The log level type to send.
      * @param {string} message - The log message.
      * @param {ObjectType} [meta] - The optional metadata to include in the log message.
      * @returns {RequestInit} The request information object.
      * @private
      */
-    private buildRequestInfo(message: string, meta?: ObjectType): RequestInit {
+    private buildRequestInfo(type: LevelType, message: string, meta?: ObjectType): RequestInit {
         const headers = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -57,6 +46,7 @@ class LogToApi {
 
         const body = JSON.stringify({
             message,
+            type,
             meta: {
                 ...this.defaultMeta,
                 ...meta,
@@ -83,14 +73,15 @@ class LogToApi {
 
     /**
      * Sends a log message to the specified URL.
+     * @param {LevelType} type - The log level type to send.
      * @param {string} message - The log message to send.
      * @param {ObjectType} [meta] - The optional metadata to include in the log message.
      * @returns {Promise<void>} A promise that resolves when the log message is sent successfully.
      * @private
      */
-    private async log(message: string, meta?: ObjectType): Promise<void> {
+    private async log(type: LevelType, message: string, meta?: ObjectType): Promise<void> {
         try {
-            const requestInfo = this.buildRequestInfo(message, meta);
+            const requestInfo = this.buildRequestInfo(type, message, meta);
             const response = await fetch(this.url, requestInfo);
 
             this.handleErrorResponse(response);
@@ -110,10 +101,7 @@ class LogToApi {
      * @returns {Promise<void>} A promise that resolves when the log message is sent successfully.
      */
     async debug(message: string, meta?: ObjectType) {
-        const check = this?.defaultLevel && levelTypeToNumber[this.defaultLevel];
-        if (!Number.isNaN(check)) {
-            await this.log(message, meta);
-        }
+        await this.log("debug", message, meta);
     }
 
     /**
@@ -121,11 +109,8 @@ class LogToApi {
     * @param {string} message - The log message.
     * @param {ObjectType} [meta] - The optional metadata to include in the log message.
     */
-    info(message: string, meta?: ObjectType) {
-        const check = this?.defaultLevel && levelTypeToNumber[this.defaultLevel];
-        if (!Number.isNaN(check)) {
-            this.log(message, meta);
-        }
+    async info(message: string, meta?: ObjectType) {
+        await this.log("info", message, meta);
     }
 
     /**
@@ -133,11 +118,8 @@ class LogToApi {
      * @param {string} message - The log message.
      * @param {ObjectType} [meta] - The optional metadata to include in the log message.
      */
-    warning(message: string, meta?: ObjectType) {
-        const check = this.defaultLevel && levelTypeToNumber[this.defaultLevel];
-        if (!Number.isNaN(check)) {
-            this.log(message, meta);
-        }
+    async warning(message: string, meta?: ObjectType) {
+        await this.log("warning", message, meta);
     }
 
     /**
@@ -145,11 +127,8 @@ class LogToApi {
      * @param {string} message - The log message.
      * @param {ObjectType} [meta] - The optional metadata to include in the log message.
      */
-    error(message: string, meta?: ObjectType) {
-        const check = this?.defaultLevel && levelTypeToNumber[this.defaultLevel];
-        if (!Number.isNaN(check)) {
-            this.log(message, meta);
-        }
+    async error(message: string, meta?: ObjectType) {
+        await this.log("error", message, meta);
     }
 
     /**
@@ -157,11 +136,8 @@ class LogToApi {
      * @param {string} message - The log message.
      * @param {ObjectType} [meta] - The optional metadata to include in the log message.
      */
-    critical(message: string, meta?: ObjectType) {
-        const check = this?.defaultLevel && levelTypeToNumber[this.defaultLevel];
-        if (!Number.isNaN(check)) {
-            this.log(message, meta);
-        }
+    async critical(message: string, meta?: ObjectType) {
+        await this.log("critical", message, meta);
     }
 
 }

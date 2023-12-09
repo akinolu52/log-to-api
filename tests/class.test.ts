@@ -1,4 +1,4 @@
-import LogToApi, { LevelType } from '../src';
+import LogToApi from '../src';
 
 global.fetch = jest.fn(() =>
     Promise.resolve({
@@ -46,16 +46,14 @@ describe('LogToApi class', () => {
         // Arrange
         const httpHeaders: HeadersInit = { 'X-Custom-Header': 'value' };
         const defaultMeta: ObjectType = { app: 'testApp' };
-        const defaultLevel: LevelType = 'debug';
 
         // Act
-        const logToApi = new LogToApi({ url, httpHeaders, defaultMeta, defaultLevel });
+        const logToApi = new LogToApi({ url, httpHeaders, defaultMeta });
 
         // Assert
         expect(logToApi).toHaveProperty('url', url);
         expect(logToApi).toHaveProperty('httpHeaders', httpHeaders);
         expect(logToApi).toHaveProperty('defaultMeta', defaultMeta);
-        expect(logToApi).toHaveProperty('defaultLevel', defaultLevel);
     });
 
     test('buildRequestInfo constructs correct RequestInit object', () => {
@@ -65,7 +63,7 @@ describe('LogToApi class', () => {
         const meta: ObjectType = { user: 'testUser' };
 
         // Act
-        const requestInfo = logToApi['buildRequestInfo'](message, meta);
+        const requestInfo = logToApi['buildRequestInfo']("info", message, meta);
 
         // Assert
         expect(requestInfo).toEqual({
@@ -78,6 +76,7 @@ describe('LogToApi class', () => {
             },
             body: JSON.stringify({
                 message,
+                type: "info",
                 meta,
             }),
         });
@@ -103,7 +102,7 @@ describe('LogToApi class', () => {
         const meta: ObjectType = { user: 'testUser' };
 
         // Act
-        await logToApi['log'](message, meta);
+        await logToApi['log']("info", message, meta);
 
         // Assert
         expect(global.console.log).toHaveBeenCalledWith(`message: "${message}", sent successfully!`);
@@ -140,7 +139,7 @@ describe('LogToApi class', () => {
 
     test('debug method sends log message when default level is set', async () => {
         // Arrange
-        const logToApi = new LogToApi({ url, defaultLevel: 'debug' });
+        const logToApi = new LogToApi({ url });
         const message = 'Debug message';
         const meta: ObjectType = { user: 'testUser' };
 
@@ -155,7 +154,7 @@ describe('LogToApi class', () => {
             url,
             expect.objectContaining({
                 method: 'POST',
-                body: expect.stringContaining(JSON.stringify({ message, meta })),
+                body: expect.stringContaining(JSON.stringify({ message, type: "debug", meta })),
             })
         );
         expect(consoleLogMock).toHaveBeenCalledWith(`message: "${message}", sent successfully!`);
@@ -166,7 +165,7 @@ describe('LogToApi class', () => {
 
     test('warning method sends log message when default level is set', async () => {
         // Arrange
-        const logToApi = new LogToApi({ url, defaultLevel: 'warning' });
+        const logToApi = new LogToApi({ url });
         const message = 'Warning message';
         const meta: ObjectType = { user: 'testUser' };
 
@@ -186,7 +185,7 @@ describe('LogToApi class', () => {
 
     test('error method sends log message when default level is set', async () => {
         // Arrange
-        const logToApi = new LogToApi({ url, defaultLevel: 'error' });
+        const logToApi = new LogToApi({ url });
         const message = 'Error message';
         const meta: ObjectType = { user: 'testUser' };
 
@@ -206,7 +205,7 @@ describe('LogToApi class', () => {
 
     test('critical method sends log message when default level is set', async () => {
         // Arrange
-        const logToApi = new LogToApi({ url, defaultLevel: 'critical' });
+        const logToApi = new LogToApi({ url });
         const message = 'Critical message';
         const meta: ObjectType = { user: 'testUser' };
 
@@ -223,10 +222,4 @@ describe('LogToApi class', () => {
         // Restore the original console.log method
         consoleLogMock.mockRestore();
     });
-
-    // Additional tests should be written for info, warning, error, and critical methods
-    // following the same pattern as the debug method test above.
-
-    // Tests should also cover cases where defaultLevel is not set or is an invalid value,
-    // and cases where the fetch call fails due to network issues or other reasons.
 });
