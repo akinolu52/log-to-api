@@ -18,11 +18,9 @@
 5. log -> where you handle all sending to http endpoint
         -> accept level, message (string) and a meta (object)
 
-
-
-private async hasNetworkConnection(): Promise<boolean> {
+<!-- private async hasNetworkConnection(): Promise<boolean> {
   return window ? window?.navigator?.onLine : true;
-}
+} -->
 
 // const hasNetworkConnection = await this.hasNetworkConnection();
 
@@ -30,3 +28,7 @@ private async hasNetworkConnection(): Promise<boolean> {
 //     console.log("You're not connected to the internet; cannot send log!");
 //     return;
 // }
+
+<!-- if (response.ok) {
+ console.log(`message: "${message}", sent successfully!`)
+} -->

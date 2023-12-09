@@ -1,4 +1,4 @@
-import Wole, { LevelType } from '../src';
+import LogToApi, { LevelType } from '../src';
 
 global.fetch = jest.fn(() =>
     Promise.resolve({
@@ -30,13 +30,13 @@ global.console = {
 // Mock for console.error to verify error outputs
 global.console.error = jest.fn();
 
-// Define types used in the Wole class
+// Define types used in the LogToApi class
 type HeadersInit = { [key: string]: string };
 type ObjectType = { [key: string]: any };
 
 const url = "https://webhook.site/bfc693e6-36f9-4fcb-8b23-53a8f024ddae";
 
-describe('Wole class', () => {
+describe('LogToApi class', () => {
     afterEach(() => {
         resetMocks();
         jest.clearAllMocks();
@@ -49,23 +49,23 @@ describe('Wole class', () => {
         const defaultLevel: LevelType = 'debug';
 
         // Act
-        const wole = new Wole({ url, httpHeaders, defaultMeta, defaultLevel });
+        const logToApi = new LogToApi({ url, httpHeaders, defaultMeta, defaultLevel });
 
         // Assert
-        expect(wole).toHaveProperty('url', url);
-        expect(wole).toHaveProperty('httpHeaders', httpHeaders);
-        expect(wole).toHaveProperty('defaultMeta', defaultMeta);
-        expect(wole).toHaveProperty('defaultLevel', defaultLevel);
+        expect(logToApi).toHaveProperty('url', url);
+        expect(logToApi).toHaveProperty('httpHeaders', httpHeaders);
+        expect(logToApi).toHaveProperty('defaultMeta', defaultMeta);
+        expect(logToApi).toHaveProperty('defaultLevel', defaultLevel);
     });
 
     test('buildRequestInfo constructs correct RequestInit object', () => {
         // Arrange
-        const wole = new Wole({ url });
+        const logToApi = new LogToApi({ url });
         const message = 'Test message';
         const meta: ObjectType = { user: 'testUser' };
 
         // Act
-        const requestInfo = wole['buildRequestInfo'](message, meta);
+        const requestInfo = logToApi['buildRequestInfo'](message, meta);
 
         // Assert
         expect(requestInfo).toEqual({
@@ -85,7 +85,7 @@ describe('Wole class', () => {
 
     test('handleErrorResponse throws error on bad response', () => {
         // Arrange
-        const wole = new Wole({ url });
+        const logToApi = new LogToApi({ url });
         const badResponse = {
             ok: false,
             status: 400,
@@ -93,17 +93,17 @@ describe('Wole class', () => {
         } as Response;
 
         // Act & Assert
-        expect(() => wole['handleErrorResponse'](badResponse)).toThrow('400 Bad Request');
+        expect(() => logToApi['handleErrorResponse'](badResponse)).toThrow('400 Bad Request');
     });
 
     test('log method sends log message and handles success response', async () => {
         // Arrange
-        const wole = new Wole({ url });
+        const logToApi = new LogToApi({ url });
         const message = 'Test log message';
         const meta: ObjectType = { user: 'testUser' };
 
         // Act
-        await wole['log'](message, meta);
+        await logToApi['log'](message, meta);
 
         // Assert
         expect(global.console.log).toHaveBeenCalledWith(`message: "${message}", sent successfully!`);
@@ -111,7 +111,7 @@ describe('Wole class', () => {
 
     test('handleErrorResponse throws error on bad response', () => {
         // Arrange
-        const wole = new Wole({ url });
+        const logToApi = new LogToApi({ url });
         const badResponse = {
             ok: false,
             status: 400,
@@ -119,11 +119,11 @@ describe('Wole class', () => {
         } as Response;
 
         // Act & Assert
-        expect(() => wole['handleErrorResponse'](badResponse)).toThrow('400 Bad Request');
+        expect(() => logToApi['handleErrorResponse'](badResponse)).toThrow('400 Bad Request');
     });
 
     it('should handle API error response', async () => {
-        const wole = new Wole({ url });
+        const logToApi = new LogToApi({ url });
 
         global.fetch = jest.fn(() =>
             Promise.resolve({
@@ -133,14 +133,14 @@ describe('Wole class', () => {
             } as Response)
         );
 
-        await wole.debug('Test message');
+        await logToApi.debug('Test message');
         expect(fetch).toHaveBeenCalled();
         expect(console.error).toHaveBeenCalled();
     });
 
     test('debug method sends log message when default level is set', async () => {
         // Arrange
-        const wole = new Wole({ url, defaultLevel: 'debug' });
+        const logToApi = new LogToApi({ url, defaultLevel: 'debug' });
         const message = 'Debug message';
         const meta: ObjectType = { user: 'testUser' };
 
@@ -148,7 +148,7 @@ describe('Wole class', () => {
         const consoleLogMock = jest.spyOn(console, 'log').mockImplementation();
 
         // Act
-        await wole.debug(message, meta);
+        await logToApi.debug(message, meta);
 
         // Assert
         expect(fetch).toHaveBeenCalledWith(
@@ -166,7 +166,7 @@ describe('Wole class', () => {
 
     test('warning method sends log message when default level is set', async () => {
         // Arrange
-        const wole = new Wole({ url, defaultLevel: 'warning' });
+        const logToApi = new LogToApi({ url, defaultLevel: 'warning' });
         const message = 'Warning message';
         const meta: ObjectType = { user: 'testUser' };
 
@@ -174,7 +174,7 @@ describe('Wole class', () => {
         const consoleLogMock = jest.spyOn(console, 'log').mockImplementation();
 
         // Act
-        await wole.warning(message, meta);
+        await logToApi.warning(message, meta);
 
         // Assert
         expect(fetch).toHaveBeenCalled();
@@ -186,7 +186,7 @@ describe('Wole class', () => {
 
     test('error method sends log message when default level is set', async () => {
         // Arrange
-        const wole = new Wole({ url, defaultLevel: 'error' });
+        const logToApi = new LogToApi({ url, defaultLevel: 'error' });
         const message = 'Error message';
         const meta: ObjectType = { user: 'testUser' };
 
@@ -194,7 +194,7 @@ describe('Wole class', () => {
         const consoleLogMock = jest.spyOn(console, 'log').mockImplementation();
 
         // Act
-        await wole.error(message, meta);
+        await logToApi.error(message, meta);
 
         // Assert
         expect(fetch).toHaveBeenCalled();
@@ -206,7 +206,7 @@ describe('Wole class', () => {
 
     test('critical method sends log message when default level is set', async () => {
         // Arrange
-        const wole = new Wole({ url, defaultLevel: 'critical' });
+        const logToApi = new LogToApi({ url, defaultLevel: 'critical' });
         const message = 'Critical message';
         const meta: ObjectType = { user: 'testUser' };
 
@@ -214,7 +214,7 @@ describe('Wole class', () => {
         const consoleLogMock = jest.spyOn(console, 'log').mockImplementation();
 
         // Act
-        await wole.critical(message, meta);
+        await logToApi.critical(message, meta);
 
         // Assert
         expect(fetch).toHaveBeenCalled();

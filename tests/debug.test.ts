@@ -1,12 +1,12 @@
-import Wole, { OptionType } from '../src';
+import LogToApi, { OptionType } from '../src';
 
 const url = "https://webhook.site/bfc693e6-36f9-4fcb-8b23-53a8f024ddae";
 const httpHeaders = { 'Authorization': 'Bearer abc123' };
 const defaultMeta = { environment: 'test' };
 const defaultLevel = 'debug';
 
-describe('debug testing with wole logger methods', () => {
-    let wole: Wole;
+describe('debug testing with logToApi logger methods', () => {
+    let logToApi: LogToApi;
 
     const options: OptionType = {
         url,
@@ -17,7 +17,7 @@ describe('debug testing with wole logger methods', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        wole = new Wole(options);
+        logToApi = new LogToApi(options);
     });
 
     afterEach(() => {
@@ -25,7 +25,7 @@ describe('debug testing with wole logger methods', () => {
     });
 
     it('should create an instance of Logger', () => {
-        expect(wole).toBeInstanceOf(Wole);
+        expect(logToApi).toBeInstanceOf(LogToApi);
     });
 
     it('should log a message', async () => {
@@ -37,7 +37,7 @@ describe('debug testing with wole logger methods', () => {
         const fetchSpy = jest.spyOn(global, "fetch");
         const consoleLogMock = jest.spyOn(console, "log").mockImplementation();
 
-        await wole.debug(message, meta);
+        await logToApi.debug(message, meta);
 
         expect(fetchSpy).toHaveBeenCalledWith(
             url,
@@ -67,7 +67,7 @@ describe('debug testing with wole logger methods', () => {
         const fetchSpy = jest.spyOn(global, "fetch");
         const consoleLogMock = jest.spyOn(console, "log").mockImplementation();
 
-        await wole.info(message, meta);
+        await logToApi.info(message, meta);
 
         expect(fetchSpy).toHaveBeenCalledWith(
             url,
@@ -97,7 +97,7 @@ describe('debug testing with wole logger methods', () => {
         const fetchSpy = jest.spyOn(global, "fetch");
         const consoleLogMock = jest.spyOn(console, "log").mockImplementation();
 
-        await wole.warning(message, meta);
+        await logToApi.warning(message, meta);
 
         expect(fetchSpy).toHaveBeenCalledWith(
             url,
@@ -127,7 +127,7 @@ describe('debug testing with wole logger methods', () => {
         const fetchSpy = jest.spyOn(global, "fetch");
         const consoleLogMock = jest.spyOn(console, "log").mockImplementation();
 
-        await wole.error(message, meta);
+        await logToApi.error(message, meta);
 
         expect(fetchSpy).toHaveBeenCalledWith(
             url,
@@ -157,7 +157,7 @@ describe('debug testing with wole logger methods', () => {
         const fetchSpy = jest.spyOn(global, "fetch");
         const consoleLogMock = jest.spyOn(console, "log").mockImplementation();
 
-        await wole.critical(message, meta);
+        await logToApi.critical(message, meta);
 
         expect(fetchSpy).toHaveBeenCalledWith(
             url,

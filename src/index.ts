@@ -19,14 +19,14 @@ const levelTypeToNumber: Record<LevelType, number> = {
 /**
  * Represents a logging utility class for sending log messages to a specified URL.
  */
-class Wole {
+class LogToApi {
     private url: string;
     private httpHeaders?: HeadersInit;
     private defaultMeta?: ObjectType;
     private defaultLevel?: LevelType;
 
     /**
-    * Creates an instance of the Wole class.
+    * Creates an instance of the LogToApi class.
     * @param {string} url - The URL to send the log messages to.
     * @param {HeadersInit} [httpHeaders] - The optional HTTP headers to include in the request.
     * @param {ObjectType} [defaultMeta] - The optional default metadata to include in the log messages.
@@ -166,4 +166,4 @@ class Wole {
 
 }
 
-export default Wole;
+export default LogToApi;

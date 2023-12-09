@@ -1,5 +1,5 @@
 {
-  "name": "lugs",
+  "name": "LogToApi",
   "version": "1.0.0",
   "description": "A package for logging",
   "main": "./dist/index.js",
