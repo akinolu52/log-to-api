@@ -1,32 +1,54 @@
 # LogToApi
 
-1. Requirement -> log to an http endpoint
+This is a package that helps you send logs from your application to an API server.
 
-2. initialize -> 
-    > url (where you want to send the logs to)
-    > http-header -> for authentication (bearer token, api key, token)
-    > merging // not for now
-    > defaultMeta -> object (what you want to send at all time, user agent, os info etc)
-    > defaultLevel -> debug | info | or 0 | 1
+The application can be used from any platform (Vanilla Js, React Js, Vue Js, Angular etc) all you need to do is to provide and endpoint that accept `POST` api connection
 
-3. debug - 0, info - 1, warning - 2, error - 3, critical - 4,
+## How to use this package
 
-4. each method in (3.) accept, message (string) and a meta (object)
+1. Install the log-to-api package
 
-5. log -> where you handle all sending to http endpoint
-        -> accept level, message (string) and a meta (object)
+   using NPM
 
-<!-- private async hasNetworkConnection(): Promise<boolean> {
-  return window ? window?.navigator?.onLine : true;
-} -->
+    ``` bash
+        npm install log-to-api
+    ```
+  
+  using yarn
 
-// const hasNetworkConnection = await this.hasNetworkConnection();
+    ``` bash
+      yarn add log-to-api
+    ```
+  
+2. Import the log-to-api package
 
-// if (!hasNetworkConnection) {
-//     console.log("You're not connected to the internet; cannot send log!");
-//     return;
-// }
+  ``` bash
+     import LogToApi from "log-to-api";
+  ```
 
-<!-- if (response.ok) {
- console.log(`message: "${message}", sent successfully!`)
-} -->
+3. Initiate an instance of the log-to-api class using the following:
+  3.1 url - (required) eg: `https://some-api.com/path`
+  3.2 httpHeaders - (optional) eg `{ 'X-Custom-Header': 'value' }`
+  3.3 defaultMeta - (optional) eg: `{ app: 'testApp' }`
+
+  ``` bash
+    const url = "https://some-api.com/path";
+    const httpHeaders = { 
+      'X-Custom-Header': 'value' 
+    };
+    const defaultMeta = {
+      app: 'testApp'
+    }
+      
+    const logToApi = new LogToApi(logToApiOptions);
+  ```
+
+4. Send your logs to the backend using any of the following methods:
+
+  ```bash
+     await logToApi.debug('Test debug message');
+     await logToApi.info('Test info message');
+     await logToApi.warning('Test warning message');
+     await logToApi.error('Test error message');
+     await logToApi.critical('Test critical message');
+  ```
