@@ -1,6 +1,13 @@
 type ObjectType = Record<string, any>;
 export type LevelType = "debug" | "info" | "warning" | "error" | "critical";
 
+export type OptionType = {
+    url: string; 
+    httpHeaders?: HeadersInit; 
+    defaultMeta?: ObjectType; 
+    defaultLevel?: LevelType
+}
+
 const levelTypeToNumber: Record<LevelType, number> = {
     "debug": 0,
     "info": 1,
@@ -25,11 +32,11 @@ class Wole {
     * @param {ObjectType} [defaultMeta] - The optional default metadata to include in the log messages.
     * @param {LevelType} [defaultLevel] - The optional default log level for the log messages.
     */
-    constructor(url: string, httpHeaders?: HeadersInit, defaultMeta?: ObjectType, defaultLevel?: LevelType) {
-        this.url = url;
-        this.httpHeaders = httpHeaders;
-        this.defaultMeta = defaultMeta;
-        this.defaultLevel = defaultLevel;
+    constructor(options: OptionType) {
+        this.url = options.url;
+        this.httpHeaders = options.httpHeaders;
+        this.defaultMeta = options.defaultMeta;
+        this.defaultLevel = options.defaultLevel;
     }
 
     /**

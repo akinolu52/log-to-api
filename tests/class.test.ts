@@ -44,23 +44,23 @@ describe('Wole class', () => {
 
     test('constructor initializes properties correctly', () => {
         // Arrange
-        const headers: HeadersInit = { 'X-Custom-Header': 'value' };
+        const httpHeaders: HeadersInit = { 'X-Custom-Header': 'value' };
         const defaultMeta: ObjectType = { app: 'testApp' };
         const defaultLevel: LevelType = 'debug';
 
         // Act
-        const wole = new Wole(url, headers, defaultMeta, defaultLevel);
+        const wole = new Wole({ url, httpHeaders, defaultMeta, defaultLevel });
 
         // Assert
         expect(wole).toHaveProperty('url', url);
-        expect(wole).toHaveProperty('httpHeaders', headers);
+        expect(wole).toHaveProperty('httpHeaders', httpHeaders);
         expect(wole).toHaveProperty('defaultMeta', defaultMeta);
         expect(wole).toHaveProperty('defaultLevel', defaultLevel);
     });
 
     test('buildRequestInfo constructs correct RequestInit object', () => {
         // Arrange
-        const wole = new Wole(url);
+        const wole = new Wole({ url });
         const message = 'Test message';
         const meta: ObjectType = { user: 'testUser' };
 
@@ -85,7 +85,7 @@ describe('Wole class', () => {
 
     test('handleErrorResponse throws error on bad response', () => {
         // Arrange
-        const wole = new Wole(url);
+        const wole = new Wole({ url });
         const badResponse = {
             ok: false,
             status: 400,
@@ -98,7 +98,7 @@ describe('Wole class', () => {
 
     test('log method sends log message and handles success response', async () => {
         // Arrange
-        const wole = new Wole(url);
+        const wole = new Wole({ url });
         const message = 'Test log message';
         const meta: ObjectType = { user: 'testUser' };
 
@@ -111,7 +111,7 @@ describe('Wole class', () => {
 
     test('handleErrorResponse throws error on bad response', () => {
         // Arrange
-        const wole = new Wole(url);
+        const wole = new Wole({ url });
         const badResponse = {
             ok: false,
             status: 400,
@@ -123,7 +123,7 @@ describe('Wole class', () => {
     });
 
     it('should handle API error response', async () => {
-        const wole = new Wole(url);
+        const wole = new Wole({ url });
 
         global.fetch = jest.fn(() =>
             Promise.resolve({
@@ -140,7 +140,7 @@ describe('Wole class', () => {
 
     test('debug method sends log message when default level is set', async () => {
         // Arrange
-        const wole = new Wole(url, undefined, undefined, 'debug');
+        const wole = new Wole({ url, defaultLevel: 'debug' });
         const message = 'Debug message';
         const meta: ObjectType = { user: 'testUser' };
 
@@ -166,7 +166,7 @@ describe('Wole class', () => {
 
     test('warning method sends log message when default level is set', async () => {
         // Arrange
-        const wole = new Wole(url, undefined, undefined, 'warning');
+        const wole = new Wole({ url, defaultLevel: 'warning' });
         const message = 'Warning message';
         const meta: ObjectType = { user: 'testUser' };
 
@@ -186,7 +186,7 @@ describe('Wole class', () => {
 
     test('error method sends log message when default level is set', async () => {
         // Arrange
-        const wole = new Wole(url, undefined, undefined, 'error');
+        const wole = new Wole({ url, defaultLevel: 'error' });
         const message = 'Error message';
         const meta: ObjectType = { user: 'testUser' };
 
@@ -206,7 +206,7 @@ describe('Wole class', () => {
 
     test('critical method sends log message when default level is set', async () => {
         // Arrange
-        const wole = new Wole(url, undefined, undefined, 'critical');
+        const wole = new Wole({ url, defaultLevel: 'critical' });
         const message = 'Critical message';
         const meta: ObjectType = { user: 'testUser' };
 
