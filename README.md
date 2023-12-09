@@ -1,6 +1,4 @@
-
-
-
+# LogToApi
 
 1. Requirement -> log to an http endpoint
 
