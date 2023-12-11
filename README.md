@@ -28,9 +28,9 @@ The application can be used from any platform (Vanilla Js, React Js, Vue Js, Ang
 
 3. Initiate an instance of the log-to-api class using the following:
 
-  * url - (required) eg: `https://some-api.com/path`
-  * httpHeaders - (optional) eg `{ 'X-Custom-Header': 'value' }`
-  * defaultMeta - (optional) eg: `{ app: 'testApp' }`
+* url - (required) eg: `https://some-api.com/path`
+* httpHeaders - (optional) eg `{ 'X-Custom-Header': 'value' }`
+* defaultMeta - (optional) eg: `{ app: 'testApp' }`
 
   ``` bash
   const url = "https://some-api.com/path";
