@@ -72,6 +72,15 @@ class LogToApi {
     }
 
     /**
+     * Checks if there is a network connection.
+     * 
+     * @returns {Promise<boolean>} A promise that resolves to a boolean indicating if there is a network connection.
+     */
+    private async hasNetworkConnection(): Promise<boolean> {
+        return window?.navigator?.onLine;
+    }
+
+    /**
      * Sends a log message to the specified URL.
      * @param {LevelType} type - The log level type to send.
      * @param {string} message - The log message to send.
@@ -82,6 +91,13 @@ class LogToApi {
     private async log(type: LevelType, message: string, meta?: ObjectType): Promise<void> {
         try {
             const requestInfo = this.buildRequestInfo(type, message, meta);
+            const hasNetworkConnection = await this.hasNetworkConnection();
+
+            if (!hasNetworkConnection) {
+                console.log("You're not connected to the internet; cannot send log!");
+                return;
+            }
+
             const response = await fetch(this.url, requestInfo);
 
             this.handleErrorResponse(response);
