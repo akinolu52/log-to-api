@@ -20,7 +20,7 @@ The application can be used from any platform (Vanilla Js, React Js, Vue Js, Ang
   yarn add log-to-api
   ```
   
-1. Import the log-to-api package
+2. Import the log-to-api package
 
   ``` bash
   import LogToApi from "log-to-api";
@@ -44,7 +44,7 @@ The application can be used from any platform (Vanilla Js, React Js, Vue Js, Ang
   const logToApi = new LogToApi(logToApiOptions);
   ```
 
-1. Send your logs to the backend using any of the following methods:
+4. Send your logs to the backend using any of the following methods:
 
   ```bash
   await logToApi.debug('Test debug message');
