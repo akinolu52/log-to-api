@@ -8,17 +8,17 @@ The application can be used from any platform (Vanilla Js, React Js, Vue Js, Ang
 
 1. Install the log-to-api package
 
-   using NPM
+    using NPM
 
     ``` bash
     npm install log-to-api
     ```
   
-  using yarn
+    using yarn
 
-  ``` bash
-  yarn add log-to-api
-  ```
+    ``` bash
+    yarn add log-to-api
+    ```
   
 2. Import the log-to-api package
 
