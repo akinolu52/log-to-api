@@ -40,6 +40,12 @@ The application can be used from any platform (Vanilla Js, React Js, Vue Js, Ang
   const defaultMeta = {
     app: 'testApp'
   }
+
+  const logToApiOptions = {
+    url, 
+    httpHeaders,
+    defaultMeta
+  }
     
   const logToApi = new LogToApi(logToApiOptions);
   ```
